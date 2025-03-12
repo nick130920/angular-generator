@@ -1,35 +1,35 @@
 import * as vscode from 'vscode';
 import { generateAngularApp } from './commands/generateAngular';
-import { promptForApiType, promptForApiFile, promptForProjectStructure } from './commands/userInteraction';
-import { getLastUsedApi, saveLastUsedApi } from './utils/storageUtils';
-import { createAngularProjectStructure } from './commands/createAngularStructure';
+import { getLastUsedApiUrl } from './utils/storageUtils';
+import { promptForApiType, promptForApiUrl, promptForProjectStructure } from './commands/userInteraction';
+import { createFeatureBasedStructure } from './commands/createFeatureStructure';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('La extensión "angular-generator" está activa.');
 
     const disposable = vscode.commands.registerCommand('extension.generateAngularFront', async () => {
         try {
-            // Obtener la última API usada o pedir al usuario que seleccione una nueva
-            let apiInfo = getLastUsedApi(context);
-            if (!apiInfo) {
-                const apiType = await promptForApiType();
-                const apiFile = await promptForApiFile(apiType);
-                if (!apiFile) {
-                    vscode.window.showErrorMessage('No se seleccionó un archivo válido.');
+            // Obtener la última URL de API utilizada o pedir una nueva
+            let apiUrl = getLastUsedApiUrl(context);
+            let apiType: string | undefined = undefined;
+
+            if (!apiUrl) {
+                apiType = await promptForApiType();
+                apiUrl = await promptForApiUrl(context, apiType);
+                if (!apiUrl) {
+                    vscode.window.showErrorMessage('No se ingresó una URL válida.');
                     return;
                 }
-                apiInfo = { type: apiType, file: apiFile };
-                saveLastUsedApi(context, apiInfo);
             }
 
-            // Preguntar si se desea generar la estructura de archivos estándar
+            // Preguntar si se debe generar la estructura feature-based
             const shouldCreateStructure = await promptForProjectStructure();
             if (shouldCreateStructure) {
-                await createAngularProjectStructure();
+                await createFeatureBasedStructure();
             }
 
-            // Generar código Angular
-            await generateAngularApp(apiInfo.type, apiInfo.file);
+            // Generar el código Angular basado en la API obtenida
+            await generateAngularApp(apiType!, apiUrl);
 
             vscode.window.showInformationMessage('🚀 Código Angular generado exitosamente.');
         } catch (error) {
@@ -39,6 +39,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(disposable);
 }
+
 
 export function deactivate() {
     console.log('La extensión "angular-generator" se ha desactivado.');

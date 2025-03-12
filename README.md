@@ -1,26 +1,21 @@
-# Angular Frontend Generator
+# Angular Feature-Based Frontend Generator
 
-**Angular Frontend Generator** es una extensión para Visual Studio Code que permite generar automáticamente una estructura en **Angular 19** basada en la documentación de **Swagger (OpenAPI)** o **GraphQL Docs**.
+**Angular Feature-Based Frontend Generator** es una extensión para Visual Studio Code que permite generar automáticamente una estructura en **Angular 19**, basada en una API **Swagger (OpenAPI)** o **GraphQL**, obtenida desde una **URL en lugar de un archivo**.
 
-Esta versión ha sido mejorada para permitir:  
-✔ **Guardar la última API utilizada** (Swagger o GraphQL).  
-✔ **Seleccionar automáticamente la API anterior o pedir una nueva**.  
-✔ **Generar opcionalmente la estructura estándar de un proyecto Angular**.  
-✔ **Generar servicios, componentes e interfaces en Angular 19**.  
+Esta versión introduce una **arquitectura feature-based**, permitiendo organizar el código en módulos de negocio en lugar de carpetas genéricas. Además, **guarda la última URL utilizada y la muestra al usuario para facilitar modificaciones**.
 
 ---
 
 ## 🚀 Características
 
-- **Generación automática de código en Angular 19** desde Swagger o GraphQL.
+- **Generación automática de código Angular 19** desde una API en **URL**.
 - **Soporte para OpenAPI (Swagger) y GraphQL**.
 - **Generación de servicios en Angular (`HttpClient`)** con métodos predefinidos según los endpoints.
-- **Generación de componentes en Angular** con estructura básica.
-- **Generación de interfaces TypeScript** basadas en los modelos extraídos.
+- **Generación de componentes en Angular** con estructura basada en features.
+- **Generación de interfaces TypeScript** para representar los modelos de datos.
 - **Selección interactiva** para elegir qué capas generar.
-- **Opción de generar la estructura estándar de un proyecto Angular**.
-- **Manejo de errores mejorado** y validaciones de archivos de API.
-- **Guarda la última API utilizada y la reutiliza en futuras sesiones**.
+- **Opción de generar la estructura feature-based del proyecto Angular**.
+- **Guarda la última URL utilizada y la reutiliza en futuras sesiones, permitiendo su modificación**.
 
 ---
 
@@ -38,69 +33,68 @@ Esta versión ha sido mejorada para permitir:
 - **Visual Studio Code** `1.75.0` o superior.
 - **Node.js** y **npm** instalados.
 - Proyecto **Angular 19** con estructura **Maven** o **Gradle**.
-- Un archivo de API en **JSON/YAML (Swagger)** o **GraphQL Schema (.graphql)**.
+- Una **URL de API en JSON/YAML (Swagger)** o **GraphQL Schema**.
 
-Si tu proyecto usa **Swagger**, asegúrate de tener el archivo **OpenAPI.json** generado correctamente.
+Si tu proyecto usa **Swagger**, asegúrate de que la API tenga un **endpoint público de OpenAPI**.
 
 ---
 
 ## 📖 Uso
 
 1. **Ejecuta el comando** `Generate Angular Frontend` desde:
-   - El menú contextual del explorador de archivos (clic derecho sobre el archivo de API).
    - La paleta de comandos de VS Code (`Ctrl + Shift + P` o `Cmd + Shift + P` en macOS).
-2. **La extensión verificará si hay una API guardada:**  
-   - Si existe, la usará automáticamente.  
-   - Si no, te pedirá seleccionar un archivo de API (Swagger o GraphQL).
-3. **Selecciona el tipo de API** si no hay una guardada:
-   - **Swagger (OpenAPI)** o **GraphQL**.
-4. **Selecciona los componentes a generar**:
+2. **Si ya usaste una API antes**, se reutilizará automáticamente y se mostrará para que puedas modificarla si es necesario.
+3. **Si no hay una API guardada**, ingresa la **URL de la API (Swagger o GraphQL)**.
+4. **Selecciona qué capas deseas generar**:
    - Servicios en Angular (`HttpClient`).
    - Interfaces TypeScript.
-   - Componentes con estructura base.
-5. **Se preguntará si deseas generar la estructura estándar del proyecto Angular**.
+   - Componentes organizados por feature.
+5. **Se preguntará si deseas generar la estructura feature-based del proyecto Angular**.
 6. **Los archivos generados se almacenarán automáticamente en tu proyecto Angular**.
 
 ---
 
-## 📂 Estructura Generada
+## 📂 Nueva Estructura Generada (Feature-Based)
 
-Dependiendo de la API, la extensión generará la siguiente estructura en Angular:
-
-```text
-src/app/
-├── services/
-│   ├── user.service.ts  # Servicio generado desde Swagger/GraphQL
-│   ├── product.service.ts
-│
-├── components/
-│   ├── user/
-│   │   ├── user.component.ts
-│   │   ├── user.component.html
-│   │   ├── user.component.scss
-│
-├── models/
-│   ├── user.model.ts  # Interfaz TypeScript generada
-│   ├── product.model.ts
-```
-
-Si seleccionas **"Sí"** en la opción de generar la estructura base, se creará lo siguiente:
+Si seleccionas la opción de arquitectura **feature-based**, la estructura del código generado será:
 
 ```text
 src/app/
-├── components/
-├── services/
-├── models/
+├── features/
+│   ├── users/
+│   │   ├── users.module.ts
+│   │   ├── services/
+│   │   │   ├── users.service.ts
+│   │   ├── components/
+│   │   │   ├── users-list/
+│   │   │   │   ├── users-list.component.ts
+│   │   │   │   ├── users-list.component.html
+│   │   │   │   ├── users-list.component.scss
+│   │   ├── models/
+│   │   │   ├── user.model.ts
+│   │   ├── users-routing.module.ts
+│
 ├── shared/
-├── assets/
-├── environments/
+│   ├── services/
+│   │   ├── api.service.ts
+│   ├── models/
+│   │   ├── base-response.model.ts
 ```
+
+Si no activas la opción de feature-based, los archivos se generarán en carpetas **genéricas** como `services/`, `components/`, `models/`.
 
 ---
 
 ## 🔧 Configuración Avanzada
 
-### **Selección del Tipo de API**
+### **Guardar Última API Usada y Permitir Modificaciones**
+
+La extensión recuerda la última **URL de API** que utilizaste y la selecciona automáticamente en futuras sesiones.  
+Si deseas modificarla, **se mostrará la URL guardada en el input de VS Code** para que puedas editarla antes de confirmar.
+
+Si dejas el campo vacío, **se reutilizará la última URL utilizada**.
+
+### **Elección del Tipo de API**
 
 Puedes configurar la extensión para seleccionar por defecto un tipo de API:
 
@@ -115,11 +109,6 @@ La extensión utiliza plantillas predefinidas para generar los archivos Angular.
 - **service.template.ts** → Define la estructura de los servicios generados.
 - **component.template.ts** → Estructura base de los componentes Angular.
 - **model.template.ts** → Define las interfaces TypeScript generadas.
-
-### **Guardar Última API Usada**
-
-La extensión recuerda la última API que utilizaste y la selecciona automáticamente en futuras sesiones.  
-Para restablecer la API guardada, puedes limpiar el estado global desde `storageUtils.ts` o seleccionar una nueva API manualmente.
 
 ---
 
