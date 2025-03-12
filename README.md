@@ -1,71 +1,108 @@
-# angular-generator README
+# Angular Frontend Generator
 
-This is the README for your extension "angular-generator". After writing up a brief description, we recommend including the following sections.
+**Angular Frontend Generator** es una extensión para Visual Studio Code que permite generar automáticamente una estructura en **Angular 19** basada en la documentación de **Swagger (OpenAPI)** o **GraphQL Docs**.
 
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Esta extensión está diseñada para optimizar el proceso de desarrollo, permitiendo a los desarrolladores generar servicios, componentes e interfaces automáticamente a partir de los endpoints y modelos extraídos de un archivo de API.
 
 ---
 
-## Following extension guidelines
+## 🚀 Características
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+- **Generación automática de código en Angular 19** desde un archivo Swagger o GraphQL.
+- **Soporte para OpenAPI (Swagger) y GraphQL**.
+- **Generación de servicios en Angular** (`HttpClient`) con métodos predefinidos según los endpoints.
+- **Generación de componentes en Angular** con estructura básica.
+- **Generación de interfaces TypeScript** basadas en los modelos extraídos.
+- **Selección interactiva** mediante QuickPick para elegir las capas a generar.
+- **Manejo de errores mejorado** y validaciones de archivos de API.
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+---
 
-## Working with Markdown
+## 🛠 Instalación
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+1. Descarga la extensión desde el [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/).
+2. Instala la extensión en VS Code.
+3. Reinicia VS Code si es necesario.
+4. ¡Listo! Ahora puedes generar código Angular basado en tus APIs.
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+---
 
-## For more information
+## 📌 Requisitos
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+- **Visual Studio Code** `1.75.0` o superior.
+- **Node.js** y **npm** instalados.
+- Proyecto **Angular 19** con estructura **Maven** o **Gradle**.
+- La documentación del API debe estar disponible en **formato JSON/YAML (Swagger)** o **GraphQL Schema**.
 
-**Enjoy!**
+Si tu proyecto usa **Swagger**, asegúrate de tener el archivo **OpenAPI.json** generado correctamente.
+
+---
+
+## 📖 Uso
+
+1. **Abre un archivo de API (Swagger o GraphQL) en el editor de VS Code.**
+2. **Ejecuta el comando** `Generate Angular Frontend` desde:
+   - El menú contextual del explorador de archivos (clic derecho sobre el archivo de API).
+   - La paleta de comandos de VS Code (`Ctrl + Shift + P` o `Cmd + Shift + P` en macOS).
+3. **Selecciona el tipo de API** que deseas procesar:
+   - **Swagger (OpenAPI)** o **GraphQL**.
+4. **Selecciona los componentes a generar**:
+   - Servicios en Angular (`HttpClient`).
+   - Interfaces TypeScript.
+   - Componentes con estructura base.
+5. **Los archivos generados se almacenarán automáticamente en tu proyecto Angular**.
+
+---
+
+## 📂 Estructura Generada
+
+Dependiendo de la API, la extensión generará la siguiente estructura en Angular:
+
+```text
+src/app/
+├── services/
+│   ├── user.service.ts  # Servicio generado desde Swagger/GraphQL
+│   ├── product.service.ts
+│
+├── components/
+│   ├── user/
+│   │   ├── user.component.ts
+│   │   ├── user.component.html
+│   │   ├── user.component.scss
+│
+├── models/
+│   ├── user.model.ts  # Interfaz TypeScript generada
+│   ├── product.model.ts
+```
+
+---
+
+## 🔧 Configuración Avanzada
+
+### **Selección del Tipo de API**
+
+Puedes configurar la extensión para seleccionar por defecto un tipo de API:
+
+1. Abre **Configuración** (`Ctrl + ,` o `Cmd + ,` en macOS).
+2. Busca `angularGenerator.apiType`.
+3. Selecciona `"swagger"` o `"graphql"` según prefieras.
+
+### **Personalización de Plantillas**
+
+La extensión utiliza plantillas predefinidas para generar los archivos Angular. Puedes modificarlas dentro del directorio `templates/` de la extensión.
+
+- **service.template.ts** → Define la estructura de los servicios generados.
+- **component.template.ts** → Estructura base de los componentes Angular.
+- **model.template.ts** → Define las interfaces TypeScript generadas.
+
+---
+
+## 🛠 Contribuciones
+
+Si encuentras algún problema o tienes sugerencias para mejorar la extensión, abre un [issue en GitHub](https://github.com/nick130920/angular-generator/issues) o envía un pull request.
+
+---
+
+## 📜 Licencia
+
+Este proyecto está licenciado bajo la **Licencia MIT**.
