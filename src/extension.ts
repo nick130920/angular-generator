@@ -5,22 +5,23 @@ import { promptForApiType, promptForApiUrl, promptForProjectStructure } from './
 import { createFeatureBasedStructure } from './commands/createFeatureStructure';
 
 export async function activate(context: vscode.ExtensionContext) {
-    console.log('La extensión "angular-generator" está activa.');
 
     const disposable = vscode.commands.registerCommand('extension.generateAngularFront', async () => {
+        console.log('La extensión "angular-generator" está activa.');
         try {
             // Obtener la última URL de API utilizada o pedir una nueva
             let apiUrl = getLastUsedApiUrl(context);
+            vscode.window.showWarningMessage(`La URL de la API utilizada es: ${apiUrl}`);
+
             let apiType: string | undefined = undefined;
 
+            apiType = await promptForApiType();
+            apiUrl = await promptForApiUrl(context, apiType);
             if (!apiUrl) {
-                apiType = await promptForApiType();
-                apiUrl = await promptForApiUrl(context, apiType);
-                if (!apiUrl) {
-                    vscode.window.showErrorMessage('No se ingresó una URL válida.');
-                    return;
-                }
+                vscode.window.showErrorMessage('No se ingresó una URL válida.');
+                return;
             }
+            
 
             // Preguntar si se debe generar la estructura feature-based
             const shouldCreateStructure = await promptForProjectStructure();

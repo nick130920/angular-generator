@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as yaml from 'js-yaml';
 import { parseGraphQLSchema } from '../utils/graphqlUtils';
 import { parseSwaggerSchema } from '../utils/swaggerUtils';
 

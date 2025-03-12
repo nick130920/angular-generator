@@ -9,6 +9,8 @@ const FEATURE_BASED_STRUCTURE = [
 ];
 
 export async function createFeatureBasedStructure() {
+    vscode.window.showInformationMessage('Generando estructura feature-based...');
+
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {
         vscode.window.showErrorMessage('No se pudo encontrar la raíz del proyecto.');
@@ -21,6 +23,7 @@ export async function createFeatureBasedStructure() {
         for (const dir of FEATURE_BASED_STRUCTURE) {
             const fullPath = path.join(projectRoot, dir);
             await fs.promises.mkdir(fullPath, { recursive: true });
+            vscode.window.showInformationMessage(`Directorio creado: ${fullPath}`);
         }
         vscode.window.showInformationMessage('📂 Estructura feature-based generada exitosamente.');
     } catch (error) {

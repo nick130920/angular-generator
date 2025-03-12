@@ -3,6 +3,7 @@
   "displayName": "angular-generator",
   "description": "Extensión para generar código Angular 19 basado en Swagger y GraphQL Docs",
   "version": "0.0.1",
+  "publisher": "Nicolas Andres Munoz",
   "engines": {
     "vscode": "^1.98.0"
   },
@@ -15,11 +16,13 @@
     "commands": [
       {
         "command": "extension.generateAngularFront",
-        "title": "Generar Código Angular desde Swagger/GraphQL"
+        "title": "Generar Código Angular desde API"
       }
     ]
   },
   "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
@@ -28,6 +31,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
@@ -40,6 +44,9 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "graphql": "^16.10.0"
+    "axios": "^1.8.3",
+    "graphql": "^16.10.0",
+    "js-yaml": "^4.1.0",
+    "yaml": "^2.1.0"
   }
 }

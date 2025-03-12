@@ -1,34 +1,25 @@
-import { parse, DocumentNode } from 'graphql';
+import * as vscode from 'vscode';
+import * as child_process from 'child_process';
+import * as path from 'path';
 
 /**
- * Parsea un esquema GraphQL y extrae los modelos y consultas.
- * @param schema Contenido del esquema GraphQL (.graphql)
- * @returns Un objeto con modelos y operaciones
+ * Ejecuta GraphQL Codegen usando el comando `npm run generate`
+ * @param workspaceFolder Ruta del proyecto donde se ejecutará el Codegen
  */
-export function parseGraphQLSchema(schema: string): { models: any[], queries: any[], mutations: any[] } {
-    const parsedSchema: DocumentNode = parse(schema);
+export async function executeGraphQLCodegen(workspaceFolder: string) {
+    return new Promise<void>((resolve, reject) => {
+        const process = child_process.exec('npm run generate', { cwd: workspaceFolder });
 
-    const models: any[] = [];
-    const queries: any[] = [];
-    const mutations: any[] = [];
+        process.stdout?.on('data', (data) => vscode.window.showInformationMessage(`📄 Codegen: ${data.toString()}`));
+        process.stderr?.on('data', (data) => vscode.window.showErrorMessage(`❌ Codegen Error: ${data.toString()}`));
 
-    parsedSchema.definitions.forEach(definition => {
-        if (definition.kind === 'ObjectTypeDefinition') {
-            const typeName = definition.name.value;
-            const fields = definition.fields?.map(field => ({
-                name: field.name.value,
-                type: field.type.kind === 'NamedType' ? field.type.name.value : 'Unknown'
-            })) || [];
-
-            if (typeName === 'Query') {
-                queries.push(...fields);
-            } else if (typeName === 'Mutation') {
-                mutations.push(...fields);
+        process.on('exit', (code) => {
+            if (code === 0) {
+                vscode.window.showInformationMessage('✅ GraphQL Codegen ejecutado correctamente.');
+                resolve();
             } else {
-                models.push({ name: typeName, fields });
+                reject(new Error('❌ Falló la ejecución de GraphQL Codegen.'));
             }
-        }
+        });
     });
-
-    return { models, queries, mutations };
 }
