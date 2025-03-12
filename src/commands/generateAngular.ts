@@ -1,27 +1,25 @@
 import * as vscode from 'vscode';
-import { parseSwagger } from './apiParser';
-import { promptForApiFile, promptForApiType } from './userInteraction';
+import { parseApiSchema } from './apiParser';
 import { generateServices } from './generateService';
 import { generateComponents } from './generateComponents';
 
-export async function generateAngularApp() {
+export async function generateAngularApp(apiType: string, apiFilePath: string) {
     try {
-        // Paso 1: Seleccionar el tipo de API (Swagger o GraphQL)
-        const apiType = await promptForApiType();
+        // Procesar el archivo y extraer endpoints y modelos
+        const apiData = await parseApiSchema(apiFilePath, apiType);
 
-        // Paso 2: Seleccionar el archivo fuente (Swagger JSON/YAML o GraphQL Schema)
-        const apiFilePath = await promptForApiFile(apiType);
-        if (!apiFilePath) throw new Error('No se seleccionó un archivo válido.');
+        if (!apiData) {
+            vscode.window.showErrorMessage('No se pudo procesar el archivo de API.');
+            return;
+        }
 
-        // Paso 3: Analizar el archivo Swagger o GraphQL
-        const apiData = await parseSwagger(apiFilePath, apiType);
-
-        // Paso 4: Generar Servicios y Componentes Angular
+        // Generar servicios y componentes en Angular
         await generateServices(apiData);
         await generateComponents(apiData);
 
-        vscode.window.showInformationMessage('Código Angular generado con éxito.');
+        vscode.window.showInformationMessage('🚀 Código Angular generado exitosamente.');
     } catch (error) {
-        vscode.window.showErrorMessage(`Error al generar código: ${(error as Error).message}`);
+        vscode.window.showErrorMessage(`❌ Error al generar código: ${(error as Error).message}`);
     }
 }
+

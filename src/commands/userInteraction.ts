@@ -14,3 +14,11 @@ export async function promptForApiFile(apiType: string): Promise<string | undefi
 
     return fileUri ? fileUri[0].fsPath : undefined;
 }
+
+export async function promptForProjectStructure(): Promise<boolean> {
+    const response = await vscode.window.showQuickPick(['Sí', 'No'], {
+        placeHolder: '¿Deseas generar la estructura estándar para un proyecto Angular?'
+    });
+
+    return response === 'Sí';
+}
