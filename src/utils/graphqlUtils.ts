@@ -1,22 +1,34 @@
 import * as vscode from 'vscode';
-import * as child_process from 'child_process';
+import * as childProcess from 'child_process';
+import * as fs from 'fs';
 import * as path from 'path';
 
 /**
- * Ejecuta GraphQL Codegen usando el comando `npm run generate`
- * @param workspaceFolder Ruta del proyecto donde se ejecutará el Codegen
+ * Ejecuta GraphQL Codegen con API y ruta configurables.
+ * @param workspaceFolder Ruta del workspace Angular
+ * @param apiUrl URL de la API GraphQL
+ * @param generatedPath Ruta donde se generará `generated.ts`
+ * @returns La ruta final del archivo generado
  */
-export async function executeGraphQLCodegen(workspaceFolder: string) {
-    return new Promise<void>((resolve, reject) => {
-        const process = child_process.exec('npm run generate', { cwd: workspaceFolder });
+export async function executeGraphQLCodegen(
+    workspaceFolder: string,
+    apiUrl: string,
+    generatedPath: string
+): Promise<string | null> {
+    return new Promise<string | null>((resolve, reject) => {
+        const process = childProcess.exec(`GRAPHQL_API=${apiUrl} GENERATED_TS_PATH=${generatedPath} npm run generate`, { cwd: workspaceFolder });
 
-        process.stdout?.on('data', (data) => vscode.window.showInformationMessage(`📄 Codegen: ${data.toString()}`));
+        let output = '';
+
+        process.stdout?.on('data', (data) => {
+            output += data.toString();
+            vscode.window.showInformationMessage(`📄 Codegen: ${data.toString()}`);
+        });
         process.stderr?.on('data', (data) => vscode.window.showErrorMessage(`❌ Codegen Error: ${data.toString()}`));
 
         process.on('exit', (code) => {
             if (code === 0) {
-                vscode.window.showInformationMessage('✅ GraphQL Codegen ejecutado correctamente.');
-                resolve();
+                resolve(generatedPath);
             } else {
                 reject(new Error('❌ Falló la ejecución de GraphQL Codegen.'));
             }

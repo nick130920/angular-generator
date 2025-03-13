@@ -3,7 +3,8 @@ import { generateServices } from './generateService';
 import { parseSwaggerSchema } from '../utils/swaggerUtils';
 import { generateModels } from './generateModels';
 import { executeGraphQLCodegen } from '../utils/graphqlUtils';
-import path from 'path';
+import * as path from 'path';
+import { generateGraphQLServices } from './generateGraphQLServices';
 
 export async function generateAngularApp(apiType: string, apiUrl: string) {
     try {
@@ -17,30 +18,26 @@ export async function generateAngularApp(apiType: string, apiUrl: string) {
 
         // Obtener los datos de la API Swagger
         let apiData;
+        const generatedPath = path.join(workspaceFolder, 'src/app/core/graphql/types/generated.ts');
 
         if (apiType.toLowerCase() === 'swagger') {
             apiData = await parseSwaggerSchema(apiUrl);
+            await generateModels(apiData);
+            await generateServices(apiData);
+
         } else if (apiType.toLowerCase() === 'graphql') {
             vscode.window.showInformationMessage('🔄 Ejecutando GraphQL Codegen...');
-            await executeGraphQLCodegen(workspaceFolder);
-            apiData = require(path.join(workspaceFolder, 'src/app/generated.ts'));
+            const generatedFilePath = await executeGraphQLCodegen(workspaceFolder, apiUrl, generatedPath);
+            if (!generatedFilePath) {
+                vscode.window.showErrorMessage('❌ No se pudo encontrar el archivo generado.');
+                return;
+            }
+            await generateGraphQLServices(workspaceFolder, generatedFilePath);
+
         } else {
             vscode.window.showErrorMessage(`❌ Tipo de API no reconocido: ${apiType}`);
             return;
         }
-
-        if (!apiData || (apiData.endpoints?.length === 0 && apiData.models?.length === 0)) {
-            vscode.window.showErrorMessage('No se pudo procesar la API Swagger.');
-            return;
-        }
-
-        vscode.window.showInformationMessage(`✅ API ${apiType} obtenida correctamente. Generando archivos...`);
-
-        // Generar modelos e interfaces TypeScript
-        await generateModels(apiData);
-
-        // Generar servicios en Angular
-        await generateServices(apiData);
 
         vscode.window.showInformationMessage('🚀 Código Angular generado exitosamente.');
     } catch (error) {

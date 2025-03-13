@@ -1,39 +1,38 @@
-# Angular Feature-Based Frontend Generator
+# Angular GraphQL & Swagger API Generator
 
-**Angular Feature-Based Frontend Generator** es una extensión para Visual Studio Code que permite generar automáticamente una estructura en **Angular 19**, basada en una API **Swagger (OpenAPI)** o **GraphQL**, obtenida desde una **URL en lugar de un archivo**.
+🚀 **Angular GraphQL & Swagger API Generator** es una extensión para Visual Studio Code que permite generar automáticamente servicios, modelos y estructuras en **Angular 19** basados en APIs de **Swagger (OpenAPI)** y **GraphQL**.
 
-Esta versión introduce una **arquitectura feature-based**, permitiendo organizar el código en módulos de negocio en lugar de carpetas genéricas. Además, **guarda la última URL utilizada y la muestra al usuario para facilitar modificaciones**.
+Esta versión **permite configurar dinámicamente** la API y la ubicación del archivo generado mediante variables de entorno, evitando que las rutas se quemen en el código.
 
 ---
 
-## 🚀 Características
+## 📌 Características
 
-- **Generación automática de código Angular 19** desde una API en **URL**.
-- **Soporte para OpenAPI (Swagger) y GraphQL**.
-- **Generación de servicios en Angular (`HttpClient`)** con métodos predefinidos según los endpoints.
-- **Generación de componentes en Angular** con estructura basada en features.
-- **Generación de interfaces TypeScript** para representar los modelos de datos.
-- **Selección interactiva** para elegir qué capas generar.
-- **Opción de generar la estructura feature-based del proyecto Angular**.
-- **Guarda la última URL utilizada y la reutiliza en futuras sesiones, permitiendo su modificación**.
+✅ **Generación automática de código Angular 19** desde una API **Swagger o GraphQL**.  
+✅ **Soporte para OpenAPI (Swagger) y GraphQL Codegen**.  
+✅ **Detección dinámica del archivo `generated.ts`** para GraphQL Codegen.  
+✅ **Ejecuta `npm run generate` con una API y ubicación personalizada.**  
+✅ **Generación de servicios en Angular (`HttpClient`)** para Swagger y GraphQL con `apollo-angular`.  
+✅ **Integración con `signal()`, `computed()` y `WritableSignal` para reactividad.**  
+✅ **Estructura modular por features** en `features/{feature}/services/`.
 
 ---
 
 ## 🛠 Instalación
 
-1. Descarga la extensión desde el [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/).
-2. Instala la extensión en VS Code.
-3. Reinicia VS Code si es necesario.
-4. ¡Listo! Ahora puedes generar código Angular basado en tus APIs.
+1️⃣ Descarga la extensión desde el [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/).  
+2️⃣ Instala la extensión en VS Code.  
+3️⃣ Reinicia VS Code si es necesario.  
+4️⃣ ¡Listo! Ahora puedes generar código Angular basado en tus APIs.
 
 ---
 
 ## 📌 Requisitos
 
-- **Visual Studio Code** `1.75.0` o superior.
-- **Node.js** y **npm** instalados.
-- Proyecto **Angular 19** con estructura **Maven** o **Gradle**.
-- Una **URL de API en JSON/YAML (Swagger)** o **GraphQL Schema**.
+- **Visual Studio Code** `1.75.0` o superior.  
+- **Node.js** y **npm** instalados.  
+- **Proyecto Angular 19** con **Apollo Angular** y **Swagger (OpenAPI)**.  
+- **`graphql-codegen` instalado y configurado en `codegen.ts`.**  
 
 Si tu proyecto usa **Swagger**, asegúrate de que la API tenga un **endpoint público de OpenAPI**.
 
@@ -41,74 +40,86 @@ Si tu proyecto usa **Swagger**, asegúrate de que la API tenga un **endpoint pú
 
 ## 📖 Uso
 
-1. **Ejecuta el comando** `Generate Angular Frontend` desde:
-   - La paleta de comandos de VS Code (`Ctrl + Shift + P` o `Cmd + Shift + P` en macOS).
-2. **Si ya usaste una API antes**, se reutilizará automáticamente y se mostrará para que puedas modificarla si es necesario.
-3. **Si no hay una API guardada**, ingresa la **URL de la API (Swagger o GraphQL)**.
-4. **Selecciona qué capas deseas generar**:
-   - Servicios en Angular (`HttpClient`).
-   - Interfaces TypeScript.
-   - Componentes organizados por feature.
-5. **Se preguntará si deseas generar la estructura feature-based del proyecto Angular**.
-6. **Los archivos generados se almacenarán automáticamente en tu proyecto Angular**.
+1️⃣ **Ejecuta el comando** `Generate Angular Frontend` desde:  
+
+- La paleta de comandos de VS Code (`Ctrl + Shift + P` o `Cmd + Shift + P` en macOS).  
+2️⃣ **Selecciona el tipo de API**:  
+- **GraphQL** o **Swagger API**.  
+3️⃣ **Introduce la URL de la API**:  
+- Swagger: `http://10.1.140.21:8113/v3/api-docs`.  
+- GraphQL: `http://10.1.140.21:8113/graphql`.  
+4️⃣ **Si seleccionas GraphQL, se ejecutará `graphql-codegen` automáticamente.**  
+5️⃣ **La estructura se generará automáticamente en tu proyecto Angular.**
 
 ---
 
-## 📂 Nueva Estructura Generada (Feature-Based)
+## 📂 Estructura Generada
 
-Si seleccionas la opción de arquitectura **feature-based**, la estructura del código generado será:
+Dependiendo de la opción seleccionada, la extensión creará la siguiente estructura:
 
 ```text
 src/app/
 ├── features/
-│   ├── users/
-│   │   ├── users.module.ts
+│   ├── brand/
 │   │   ├── services/
-│   │   │   ├── users.service.ts
-│   │   ├── components/
-│   │   │   ├── users-list/
-│   │   │   │   ├── users-list.component.ts
-│   │   │   │   ├── users-list.component.html
-│   │   │   │   ├── users-list.component.scss
+│   │   │   ├── brand.service.ts
 │   │   ├── models/
-│   │   │   ├── user.model.ts
-│   │   ├── users-routing.module.ts
+│   │   │   ├── brand.model.ts
+│   │   ├── brand-routing.module.ts
 │
-├── shared/
+├── core/
+│   ├── graphql/
+│   │   ├── types/
+│   │   │   ├── generated.ts  (archivo generado automáticamente por GraphQL Codegen)
 │   ├── services/
 │   │   ├── api.service.ts
 │   ├── models/
 │   │   ├── base-response.model.ts
 ```
 
-Si no activas la opción de feature-based, los archivos se generarán en carpetas **genéricas** como `services/`, `components/`, `models/`.
+Si **no activas feature-based**, los archivos se generarán en `core/services/`, `core/models/`.
 
 ---
 
 ## 🔧 Configuración Avanzada
 
-### **Guardar Última API Usada y Permitir Modificaciones**
+### **Configuración de GraphQL Codegen**
 
-La extensión recuerda la última **URL de API** que utilizaste y la selecciona automáticamente en futuras sesiones.  
-Si deseas modificarla, **se mostrará la URL guardada en el input de VS Code** para que puedas editarla antes de confirmar.
+La extensión ahora **acepta variables de entorno** para cambiar la API y la ubicación de `generated.ts`.
 
-Si dejas el campo vacío, **se reutilizará la última URL utilizada**.
+#### **Ejemplo `codegen.ts`**
 
-### **Elección del Tipo de API**
+```typescript
+import { CodegenConfig } from '@graphql-codegen/cli';
 
-Puedes configurar la extensión para seleccionar por defecto un tipo de API:
+const GRAPHQL_API = process.env['GRAPHQL_API'] || 'http://localhost:8080/graphql';
+const GENERATED_TS_PATH = process.env['GENERATED_TS_PATH'] || './src/app/core/graphql/types/generated.ts';
 
-1. Abre **Configuración** (`Ctrl + ,` o `Cmd + ,` en macOS).
-2. Busca `angularGenerator.apiType`.
-3. Selecciona `"swagger"` o `"graphql"` según prefieras.
+const config: CodegenConfig = {
+    schema: GRAPHQL_API,
+    documents: './src/app/core/graphql/**/*.graphql',
+    generates: {
+        [GENERATED_TS_PATH]: {
+            documents: './src/app/core/graphql/**/*.graphql',
+            plugins: ['typescript', 'typescript-operations', 'typescript-apollo-angular'],
+        },
+    },
+};
 
-### **Personalización de Plantillas**
+export default config;
+```
 
-La extensión utiliza plantillas predefinidas para generar los archivos Angular. Puedes modificarlas dentro del directorio `templates/` de la extensión.
+### **Ejecutar `graphql-codegen` con una API personalizada**
 
-- **service.template.ts** → Define la estructura de los servicios generados.
-- **component.template.ts** → Estructura base de los componentes Angular.
-- **model.template.ts** → Define las interfaces TypeScript generadas.
+```sh
+GRAPHQL_API=http://10.1.140.21:8113/graphql GENERATED_TS_PATH=./src/app/graphql/types/generated.ts npm run generate
+```
+
+### **Ejecutar desde Windows PowerShell**
+
+```sh
+$env:GRAPHQL_API="http://10.1.140.21:8113/graphql"; $env:GENERATED_TS_PATH="./src/app/graphql/types/generated.ts"; npm run generate
+```
 
 ---
 
