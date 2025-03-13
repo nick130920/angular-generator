@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { writeFile } from './fileWriter';
+import { writeFile } from '../utils/fileWriter';
 
 export async function generateComponents(apiData: any) {
     for (const model of apiData.models) {

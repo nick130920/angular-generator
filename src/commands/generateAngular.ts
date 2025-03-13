@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { generateServices } from './generateService';
 import { parseSwaggerSchema } from '../utils/swaggerUtils';
 import { generateModels } from './generateModels';
-import { executeGraphQLCodegen, parseGraphQLSchema } from '../utils/graphqlUtils';
+import { executeGraphQLCodegen } from '../utils/graphqlUtils';
 import path from 'path';
 
 export async function generateAngularApp(apiType: string, apiUrl: string) {

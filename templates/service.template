@@ -1,0 +1,18 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '@environment/environment';
+
+${IMPORTS}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ${FEATURE}Service {
+    private baseUrl = environment.apiUrl;
+
+    private httpClient = inject(HttpClient);
+    constructor() {}
+
+${METHODS}
+}

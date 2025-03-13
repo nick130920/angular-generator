@@ -32,6 +32,9 @@ export async function parseSwaggerSchema(apiUrl: string): Promise<{ endpoints: a
                 endpoints.push({
                     url: path,
                     method: method.toUpperCase(),
+                    tags: operation.tags[0] || ['shared'],
+                    summary: operation.summary || '',
+                    description: operation.description || '',
                     operationId: operation.operationId || '',
                     parameters: operation.parameters || [],
                     requestBody: operation.requestBody || null,
