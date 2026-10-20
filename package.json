@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@vscode/vsce": "^3.2.2",
-    "axios": "^1.8.3",
+    "axios": "^1.20.0",
     "graphql": "^16.10.0",
     "js-yaml": "^4.1.0",
     "yaml": "^2.1.0"
